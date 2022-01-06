@@ -3,23 +3,17 @@
 $data = file_get_contents('books.json');
 $books = json_decode($data, true);
 
-if (isset($_GET['search']))
+if (isset($_POST['search']))
 {
-    $search = $_GET['search'];
+    $search = $_POST['search'];
     $search_length = strlen($search);
-    $search = strtolower($search);
-    $search = explode(" ", $search);
+
     $search_item = array();
     foreach ($books as $key => $book)
     {
-        $title = strtolower($book['title']);
-        for ($i = 0; $i < sizeof($search); $i += 1)
+        if(explode(" ", strtolower($search)) == explode(" ", strtolower($book['title'])))
         {
-            if ($search[$i] == "" || $search[$i] == " ") continue;
-            if (strpos((string)$title, (string)($search[$i])) !== false)
-            {
-                array_push($search_item, $books[$key]);
-            }
+            array_push($search_item, $book);
         }
     }
     if ($search_length != 0)
@@ -88,7 +82,7 @@ if (isset($_GET['search']))
         </div>
 
         <div style="display: flex; flex-direction: column; width: 100%; margin: 40px; justify-content: center; align-items: center;">
-                <form action="/index.php" name="form" method="get">
+                <form action="/index.php" name="form" method="post">
                     <input type="text" name="search" id="search" style="height: 30px; width: 400px;">
                     <input type="submit" value="Search" style="height: 30px; width: 100px;">
                 </form>
